@@ -8,3 +8,16 @@ A facter plugin is used to fetch credentials from the vault credentials storage.
 
 ## vault-token puppet module
 A vault-token puppet module is used to generate a new accessor token using a pre-defined policy. This token is stored in a /etc/vault.conf file.
+
+# workflow
+1. unseal vault credential storage
+1. set a FACTER_vault_token environment variable with a root or other token with 'token creation capabilities'
+1. enable vault_token module:
+    class{'vault_token':
+      host    => 'vault.domain.com',
+      require => Package['curl'],
+    }
+1. use variable:
+    user{'vasya':
+        password => "$::vault['users/vasya']",
+    }
